@@ -19,4 +19,4 @@ Server-side rendering/static generation and data-fetching<br>
 -Homepage; static and revalidated. Should be understood by search engine crawlers, and visitors should be able to see something on the site instantly. Data not user specific or data behind log in screen etc. <br>
 -All events page: <br>
 -Event details: individual events page important for search engines<br>
--Filtered events: client side data fetching
+-Filtered events: getServerSideProps or client-side rendering
