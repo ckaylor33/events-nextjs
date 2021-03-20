@@ -42,4 +42,15 @@ Plan<br>
 ## API Routes<br>
 
 -Set up input files to handle forms, emails, comments etc. Need to implement functionality that handles incoming email address; accepts the request and frontend sends request. Post requests.<br>
--Need to add another api route that allows users to submit comments, this needs to be dynamic as comments will be for specific events. Id of the event that the comment belongs to will be part of the url of the api route. Again need to handle incoming requests/extract incoming data and handle case that a request is sent to fetch the data. Get and post requests; post adds new comment, get request to fetch comments
+-Need to add another api route that allows users to submit comments, this needs to be dynamic as comments will be for specific events. Id of the event that the comment belongs to will be part of the url of the api route. Again need to handle incoming requests/extract incoming data and handle case that a request is sent to fetch the data. Get and post requests; post adds new comment, get request to fetch comments<br>
+-Set up database to store emails and comments to make app scalable & production ready; use MongoDB<br>
+
+## Improvements
+
+-Need to add responses on the frontend for the user when either getting/posting info to the database. Loading spinner, successful post, successful sign up etc. <br>
+-Add response for errors on the frontend so the user gets immediate feedback <br>
+-Make completely mobile responsive and improve frontend styling
+
+## Things to keep in mind
+
+-At the moment I always close the MongoDB connections via client.close(). This works. If I build an application where the MongoDB-related code will execute frequently (e.g. the API route will be hit frequently), I might want to take advantage of MongoDB's "connection pooling". For this, remove all client.close() calls from the code. The connection will then NOT be closed and will be re-used across requests.

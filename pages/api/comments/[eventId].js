@@ -1,5 +1,21 @@
-function handler(req, res) {
+import {
+  insertDocument,
+  connectDatabase,
+  getAllDocuments,
+} from '../../../helpers/db-util'
+
+async function handler(req, res) {
   const eventId = req.query.eventId
+
+  let client
+
+  try {
+    client = await connectDatabase()
+  } catch (error) {
+    res.status(500).json({ message: 'Connecting to the database failed.' })
+    return
+  }
+
   if (req.method === 'POST') {
     const { email, name, text } = req.body
     // add server-side validation - improve
@@ -11,30 +27,40 @@ function handler(req, res) {
       !text.trim() === ''
     ) {
       res.status(422).message({ message: 'Invalid input.' })
+      client.close()
       return
     }
+
     const newComment = {
-      id: new Date().toISOString(),
       email,
       name,
       text,
+      eventId,
     }
-    console.log(newComment)
-    res.status(201).json({ message: 'Added comment.', comment: newComment })
+
+    let result
+
+    try {
+      result = await insertDocument(client, 'comments', newComment)
+      newComment._id = result.insertedId
+      res.status(201).json({ message: 'Added comment.', comment: newComment })
+    } catch (error) {
+      res.status(500).json({ message: 'Inserting comment failed.' })
+    }
   } else if (req.method === 'GET') {
-    const dummyList = [
-      {
-        id: 'c1',
-        name: 'Charlie',
-        text: 'Message to mars!',
-      },
-      {
-        id: 'c2',
-        name: 'Agne',
-        text: 'Message to venus!',
-      },
-    ]
-    res.status(200).json({ comments: dummyList })
+    let documents
+    try {
+      documents = await getAllDocuments(
+        client,
+        'comments',
+        { _id: -1 },
+        { eventId: eventId }
+      )
+      res.status(200).json({ comments: documents })
+    } catch (error) {
+      res.status(500).json({ message: 'Getting comments failed.' })
+    }
   }
+  client.close()
 }
 export default handler
