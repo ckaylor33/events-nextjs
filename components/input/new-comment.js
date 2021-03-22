@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+
 import classes from './new-comment.module.css'
 
 function NewComment(props) {
@@ -34,6 +35,8 @@ function NewComment(props) {
       text: enteredComment,
     })
   }
+
+  // add pending, error, success & show loading text while waiting for comments to be loaded
 
   return (
     <form className={classes.form} onSubmit={sendCommentHandler}>
